@@ -18,3 +18,12 @@ Route::get('/', 'PrincipalController@principal');
 Route::get('/sobre-nos',  'SobreNosController@sobreNos');
 
 Route::get('/contato',  'ContatoController@contato');
+
+// parametro opcionais
+// Route::get('/contato/{nome}/{categoria?}',  function($nome, $categoria = ''){
+//     return "Estamos aqui " . $nome . " " . $categoria;
+// });
+
+Route::get('/contato/{nome}/{categoria_id}',  function(string $nome = 'Desconhecido', int $categoria = 1){
+    return "Estamos aqui " . $nome . " " . $categoria;
+})->where('categoria_id', '[0-9]+')->where('nome','[A-Za-z]+');

@@ -25,9 +25,9 @@ Route::get('/login',  function(){
 // agrupamento de rotas
 
 Route::prefix('/app')->group(function() {
-    Route::get('/clientes', function () { return 'Clientes'; });
-    Route::get('/fornecedores', function () { return 'Fornecedores'; });
-    Route::get('/produtos', function () { return 'Produtos'; });
+    Route::get('/clientes', function () { return 'Clientes'; })->name('app.fornecedores');;
+    Route::get('/fornecedores', 'FornecedorController@index')->name('app.fornecedores');
+    Route::get('/produtos', function () { return 'Produtos'; })->name('app.fornecedores');;
 });
 
 // rotas dinamicas
@@ -52,4 +52,4 @@ Route::fallback(function(){
 //metodo redirect na route
 // Route::redirect('/rota2', '/rota1');
 
-
+Route::get('/teste/{p1}/{p2}', 'TesteController@teste')->name('teste');

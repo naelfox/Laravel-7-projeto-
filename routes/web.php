@@ -30,7 +30,26 @@ Route::prefix('/app')->group(function() {
     Route::get('/produtos', function () { return 'Produtos'; });
 });
 
-
+// rotas dinamicas
 Route::get('/contato/{nome}/{categoria_id}',  function (string $nome = 'Desconhecido', int $categoria = 1) {
     return "Estamos aqui " . $nome . " " . $categoria;
 })->where('categoria_id', '[0-9]+')->where('nome', '[A-Za-z]+');
+
+//
+Route::get('/rota1', function(){
+    echo 'Rota 1';
+})->name('site.rota1');
+
+Route::get('/rota2', function(){
+    return redirect()->route('site.rota1');
+})->name('site.rota2');
+
+
+Route::fallback(function(){
+    echo 'A rota acessada não existe';
+});
+
+//metodo redirect na route
+// Route::redirect('/rota2', '/rota1');
+
+

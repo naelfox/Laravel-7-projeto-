@@ -8,7 +8,7 @@ echo "Olá";
 
 @endphp
 
-{{-- @dd($fornecedores) --}}
+@dd($fornecedores)
 
 
 @if(count($fornecedores) > 0 && count($fornecedores) < 10)

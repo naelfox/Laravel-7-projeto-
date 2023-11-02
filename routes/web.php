@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(LogAcessoMiddleware::class)->get('/', 'PrincipalController@principal')->name('site.index');
+Route::get('/', 'PrincipalController@principal')->name('site.index')->middleware('log.acesso');
 
 Route::get('/sobre-nos',  'SobreNosController@sobreNos')->name('site.sobrenos');
 
@@ -28,7 +28,7 @@ Route::get('/login',  function(){
 
 // agrupamento de rotas
 
-Route::prefix('/app')->group(function() {
+Route::middleware('log.acesso', 'autenticacao:padrao')->prefix('/app')->group(function() {
     Route::get('/clientes', function () { return 'Clientes'; })->name('app.fornecedores');;
     Route::get('/fornecedores', 'FornecedorController@index')->name('app.fornecedores');
     Route::get('/produtos', function () { return 'Produtos'; })->name('app.fornecedores');;

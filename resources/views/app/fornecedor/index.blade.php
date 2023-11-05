@@ -1,63 +1,34 @@
-<h3>Fornecedor</h3>
-{{-- Fica o comentário que será descartado --}}
+@extends('app.layouts.basico')
+
+@section('titulo', 'Fornecedor')
+
+@section('conteudo')
 
 
-@php
+    <div class="conteudo-pagina">
+        <div class="titulo-pagina">
+            <p>Fornecedor</p>
+        </div>
 
-    echo 'Olá';
+        <div class="menu">
+            <ul>
+                <li><a href="{{ route('app.fornecedor.adicionar') }}">Novo</a></li>
+                <li><a href="{{ route('app.fornecedor') }}">Consulta</a></li>
+            </ul>
+        </div>
 
-@endphp
-<br>
+        <div class="informacao-pagina">
+            <div style="width: 30%; margin-left: auto; margin-right: auto">
+                <form action="{{ route('app.fornecedor.listar') }}" method="post">
+                    @csrf
+                    <input type="text" name="nome" placeholder="Nome" id="borda-preta">
+                    <input type="text" name="site" placeholder="Site" id="borda-preta">
+                    <input type="text" name="uf" placeholder="UF" id="borda-preta">
+                    <input type="text" name="email"  placeholder="E-mail" id="borda-preta">
+                    <button type="submit" id="borda-preta">Pesquisar</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-@empty($fornecedores)
-    array vazio
-@endempty
-
-
-{{-- @dd($fornecedores) --}}
-@forelse ($fornecedores as $fornecedor)
-    Iteração atual: {{ $loop->iteration }} <br>
-    Primeira iteração: @if($loop->first)
-                        Sim
-                        @else
-                        Não
-                        @endif
-    Fornecedor {{ $fornecedor['nome'] }} <br>
-    Endereço {{ $fornecedor['endereco'] }} <br><br>
-@empty
-    Não existem fornecedores cadastrados
-@endforelse
-
-
-
-{{-- @empty($fornecedores[0]['cnpj'])
-    Vazio
-@endempty
-
-@isset($fornecedores[0]['empresa'])
-    <h2> {{ $fornecedores[0]['empresa'] }}</h2>
-@endisset
-
-Fornecedor: {{ $fornecedores[0]['nome'] }}
-<br>
-Satatus: {{ $fornecedores[0]['status'] }}
-<br>
-@if (!($fornecedores[0]['status'] == 'S'))
-    Fornecedor inativo
-@endif
-
-@unless ($fornecedores[0]['status'] == 'S')
-    Fornecedor inativo
-@endunless --}}
-
-
-
-{{--
-@if (count($fornecedores) > 0 && count($fornecedores) < 10)
-    <h3>Existem alguns fornecedores cadastrados</h3>
-@elseif(count($fornecedores) > 10)
-    <h3>Existem vários fornecedores cadastrados</h3>
-@else
-    <h3>Ainda não existem fornecedores cadastrados</h3>
-@endif
- --}}
+@endsection

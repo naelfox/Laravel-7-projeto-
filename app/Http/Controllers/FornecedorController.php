@@ -2,33 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Fornecedor;
 use Illuminate\Http\Request;
 
 class FornecedorController extends Controller
 {
     public function index()
     {
-        $fornecedores = [
-            [
-                'nome' => 'Fornecedor 1',
-                'endereco' => 'Rua Fornecedor 1, Cidade 1',
-                'telefone' => '123-456-7890',
-                'email' => 'fornecedor1@example.com'
-            ],
-            [
-                'nome' => 'Fornecedor 2',
-                'endereco' => 'Rua Fornecedor 2, Cidade 2',
-                'telefone' => '987-654-3210',
-                'email' => 'fornecedor2@example.com'
-            ],
-            [
-                'nome' => 'Fornecedor 3',
-                'endereco' => 'Rua Fornecedor 3, Cidade 3',
-                'telefone' => '555-555-5555',
-                'email' => 'fornecedor3@example.com'
-            ]
-        ];
-        return view('app.fornecedor.index', compact('fornecedores'));
-        // return view('app.fornecedor.index');
+        return view('app.fornecedor.index');
+    }
+
+    public function listar(Request $request)
+    {
+
+        $fornecedores = Fornecedor::where('nome', 'like', '%' . $request->input('nome') . '%')
+            ->where('site', 'like', '%' . $request->input('site') . '%')
+            ->where('uf', 'like', '%' . $request->input('uf') . '%')
+            ->where('email', 'like', '%' . $request->input('email') . '%')
+            ->paginate(2);
+
+        // dd($fornecedores);
+        return  view('app.fornecedor.listar', ['fornecedores' => $fornecedores, 'request' => $request->all()]);
+    }
+
+    public function adicionar(Request $request)
+    {
+
+        $msg = '';
+        if ($request->input('_token') != '' && $request->input('id') == '') {
+            $regras = [
+                'nome' => 'required|min:3|max:40',
+                'site' => 'required',
+                'uf' => 'required|min:2|max:2',
+                'email' => 'email',
+            ];
+            $feedback = [
+                'required' => 'O campo :attribute deve ser preenchido',
+                'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres',
+                'nome.max' => 'O campo nome deve ter no máximo 40 caracteres',
+                'uf.min' => 'O campo uf deve ter no máximo 2 caracteres',
+                'uf.max' => 'O campo uf deve ter no máximo 2 caracteres',
+                'email.email' => 'O campo e-mail deve ser preenchido corretamente',
+            ];
+
+            $request->validate($regras, $feedback);
+
+            $fornecedor = new Fornecedor();
+            $fornecedor->create($request->all());
+
+            $msg = 'Cadastro realizado com sucesso';
+        }
+        if ($request->input('_token') != '' && $request->input('id') != '') {
+            $fornecedor = Fornecedor::find($request->input('id'));
+            $update = $fornecedor->update($request->all());
+            if($update){
+                $msg = 'Update Realizado com sucesso';
+            }else{
+                $msg = 'Update apresentou problema';
+
+            }
+            return redirect()->route('app.fornecedor.editar', ['id' => $request->input('id'), 'msg' => $msg]);
+        }
+        return view('app.fornecedor.adicionar', ['msg' => $msg]);
+    }
+
+    public function editar($id, $msg = '')
+    {
+        $fornecedor = Fornecedor::find($id);
+
+        return view('app.fornecedor.adicionar', ['fornecedor' => $fornecedor, 'msg' => $msg]);
     }
 }
+

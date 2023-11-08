@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Produto;
+use App\Unidade;
 use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
@@ -28,7 +29,8 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-       return view('app.produto.create');
+        $unidades = Unidade::all();
+        return view('app.produto.create', ['unidades' => $unidades]);
     }
 
     /**
@@ -39,7 +41,27 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $regras = [
+            'nome' => 'required|min:3|max:40',
+            'descricao' => 'required|min:3|max:2000',
+            'peso' => 'required|integer',
+            'unidade_id' => 'exists:unidade,id',
+
+        ];
+
+        $feedback = [
+            'required' => 'O campo :attribute deve ser preenchido',
+            'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres',
+            'nome.max' => 'O campo nome deve ter no mínimo 40 caracteres',
+            'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres',
+            'descricao.max' => 'O campo descrição deve ter no máximo 200 caracteres',
+            'integer' => 'O campo peso dever ser um npumero inteiro',
+            'unidade_id.exists' => 'A unidade de medida informada não existe'
+        ];
+        $request->validate($regras, $feedback);
+
+        Produto::create($request->all());
+        return redirect()->route('produto.index');
     }
 
     /**
@@ -50,7 +72,7 @@ class ProdutoController extends Controller
      */
     public function show(Produto $produto)
     {
-        //
+        return view('app.produto.show', ['produto' => $produto]);
     }
 
     /**

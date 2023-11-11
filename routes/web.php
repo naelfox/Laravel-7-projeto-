@@ -44,6 +44,7 @@ Route::middleware('log.acesso', 'autenticacao:padrao,visitante')->prefix('/app')
 
 
     Route::resource('produto', 'ProdutoController');
+    Route::resource('produto-detalhe', 'ProdutoDetalheController');
 });
 
 // rotas dinamicas

@@ -8,6 +8,25 @@ use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
+
+    private $regras = [
+        'nome' => 'required|min:3|max:40',
+        'descricao' => 'required|min:3|max:2000',
+        'peso' => 'required|integer',
+        'unidade_id' => 'exists:unidades,id',
+
+    ];
+
+    private $feedback = [
+        'required' => 'O campo :attribute deve ser preenchido',
+        'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres',
+        'nome.max' => 'O campo nome deve ter no mínimo 40 caracteres',
+        'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres',
+        'descricao.max' => 'O campo descrição deve ter no máximo 200 caracteres',
+        'integer' => 'O campo peso dever ser um npumero inteiro',
+        'unidade_id.exists' => 'A unidade de medida informada não existe'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -41,24 +60,10 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $regras = [
-            'nome' => 'required|min:3|max:40',
-            'descricao' => 'required|min:3|max:2000',
-            'peso' => 'required|integer',
-            'unidade_id' => 'exists:unidade,id',
 
-        ];
+        // dd($request);
 
-        $feedback = [
-            'required' => 'O campo :attribute deve ser preenchido',
-            'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres',
-            'nome.max' => 'O campo nome deve ter no mínimo 40 caracteres',
-            'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres',
-            'descricao.max' => 'O campo descrição deve ter no máximo 200 caracteres',
-            'integer' => 'O campo peso dever ser um npumero inteiro',
-            'unidade_id.exists' => 'A unidade de medida informada não existe'
-        ];
-        $request->validate($regras, $feedback);
+        $request->validate($this->regras, $this->feedback);
 
         Produto::create($request->all());
         return redirect()->route('produto.index');
@@ -83,7 +88,9 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
+
         $unidades = Unidade::all();
+
         return view('app.produto.edit', [
             'produto' => $produto,
             'unidades' => $unidades
@@ -99,6 +106,7 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
+        $request->validate($this->regras, $this->feedback);
         $produto->update($request->all());
         return redirect()->route('produto.show', ['produto' => $produto->id]);
     }
@@ -112,5 +120,8 @@ class ProdutoController extends Controller
     public function destroy(Produto $produto)
     {
         //
+        $produto->delete();
+
+        return redirect()->route('produto.index', ['produto' => $produto->id]);
     }
 }

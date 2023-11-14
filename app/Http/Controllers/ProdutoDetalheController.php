@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Produto;
+use App\ProdutoDetalhe;
+use App\Unidade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ProdutoDetalheController extends Controller
 {
@@ -23,7 +27,8 @@ class ProdutoDetalheController extends Controller
      */
     public function create()
     {
-        //
+        $unidades = Unidade::all();
+        return view('app.produto_detalhe.create', ['unidades' => $unidades]);
     }
 
     /**
@@ -34,7 +39,8 @@ class ProdutoDetalheController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        ProdutoDetalhe::create($request->all());
+        echo 'dados inseridos';
     }
 
     /**
@@ -51,12 +57,14 @@ class ProdutoDetalheController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  App\ProdutoDetalhe  $produtoDetalhe
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(ProdutoDetalhe $produtoDetalhe)
     {
         //
+        $unidades = Unidade::with(['produto'])->all();
+        return view('app.produto_detalhe.edit', ['produto_detalhe' => $produtoDetalhe, 'unidades' => $unidades]);
     }
 
     /**
@@ -66,9 +74,10 @@ class ProdutoDetalheController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ProdutoDetalhe $produtoDetalhe)
     {
-        //
+        $produtoDetalhe->update($request->all());
+        echo 'dados atualizados com sucesso!';
     }
 
     /**

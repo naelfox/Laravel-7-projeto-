@@ -18,17 +18,19 @@
         </div>
 
         <div class="informacao-pagina">
-            <div style="width: 30%; margin-left: auto; margin-right: auto">
-                <table border="1" width="100%">
+            <div style="width: 100%; margin-left: auto; margin-right: auto;">
+                <table border="1" style="margin-left: auto; margin-right: auto;">
 
                     <head>
                         <tr>
                             <th>Nome</th>
                             <th>Descrição</th>
+                            <th>Fornecedor</th>
                             <th>Peso</th>
                             <th>Unidade ID</th>
-                            <th></th>
-                            <th></th>
+                            <th>Comprimento</th>
+                            <th>Altura</th>
+                            <th>Largura</th>
                         </tr>
                     </head>
 
@@ -37,8 +39,12 @@
                             <tr>
                                 <td> {{ $produto->nome }} </td>
                                 <td> {{ $produto->descricao }} </td>
+                                <td> {{ $produto->fornecedor->nome }} </td>
                                 <td> {{ $produto->peso }} </td>
                                 <td> {{ $produto->unidade_id }} </td>
+                                <td> {{ $produto->produtoDetalhe->comprimento ?? '-' }} </td>
+                                <td> {{ $produto->produtoDetalhe->altura ?? '-' }} </td>
+                                <td> {{ $produto->produtoDetalhe->largura ?? '-'  }} </td>
                                 <td> <a href="{{ route('produto.show', ['produto' => $produto->id]) }}">Visualizar</a> </td>
                                 <td>
 

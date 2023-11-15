@@ -39,8 +39,34 @@
                                 <td> {{ $fornecedor->site }} </td>
                                 <td> {{ $fornecedor->uf }} </td>
                                 <td> {{ $fornecedor->email }} </td>
-                                <td>  <a href="{{ route('app.fornecedor.excluir', $fornecedor->id) }}">Excluir</a> </td>
+                                <td> <a href="{{ route('app.fornecedor.excluir', $fornecedor->id) }}">Excluir</a> </td>
                                 <td> <a href="{{ route('app.fornecedor.editar', $fornecedor->id) }}">Editar</a> </td>
+                            </tr>
+                            <tr>
+
+                                <td colspan="6">
+                                    <table border="1" style="margin:20px">
+                                        <thead>
+                                            <tr>
+                                                <th> ID </th>
+                                                <th> Nome </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                            @foreach ($fornecedor->produto as $produto)
+                                                <tr>
+                                                    <td>{{ $produto->id }}</td>
+                                                    <td>{{ $produto->nome }}</td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
+
+                                </td>
+
                             </tr>
                         @endforeach
                     </tbody>
@@ -54,7 +80,8 @@
 
 
                 <br>
-               Registros por página: {{ $fornecedores->count() }} Exibindo página {{ $fornecedores->currentPage() }} de {{ $fornecedores->lastPage() }} e Total de registros {{ $fornecedores->total() }}
+                Registros por página: {{ $fornecedores->count() }} Exibindo página {{ $fornecedores->currentPage() }} de
+                {{ $fornecedores->lastPage() }} e Total de registros {{ $fornecedores->total() }}
             </div>
         </div>
     </div>

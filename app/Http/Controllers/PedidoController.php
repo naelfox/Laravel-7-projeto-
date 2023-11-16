@@ -3,32 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
-use Facade\FlareClient\Http\Client;
+use App\Pedido;
 use Illuminate\Http\Request;
 
-class ClienteController extends Controller
+class PedidoController extends Controller
 {
+
+    private $regras =  [
+        'cliente_id' => 'required'
+    ];
+
+    private $feedback = [
+        'required' => 'O campo deve :attribute é obrigatório',
+    ];
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-    private $regras =  [
-        'nome' => 'required|min:3|max:50'
-    ];
-
-    private $feedback = [
-        'required' => 'O campo deve :attribute é obrigatório',
-        'nome.min' => 'O campo :attribute deve ter no mínimo 3 caracteres',
-        'nome.max' => 'O campo :attribute deve ter no máximo 50 caracteres',
-    ];
-
     public function index(Request $request)
     {
-        $clientes = Cliente::paginate(10);
-
-        return view('app.cliente.index', ['clientes' => $clientes, 'request' => $request->all()]);
+        $pedidos = Pedido::with('cliente')->paginate(10);
+        return view('app.pedido.index', ['pedidos' => $pedidos, 'request' => $request->all()]);
     }
 
     /**
@@ -38,7 +34,8 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        return view('app.cliente.create');
+        $clientes = Cliente::all();
+        return view('app.pedido.create', ['clientes' => $clientes]);
     }
 
     /**
@@ -49,11 +46,11 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate($this->regras, $this->feedback);
 
-        // dd($request->all());
-        Cliente::create($request->all());
-        return redirect()->route('cliente.index');
+        Pedido::create($request->all());
+        return redirect()->route('pedido.index');
     }
 
     /**
@@ -73,9 +70,10 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cliente $cliente)
+    public function edit(Pedido $pedido)
     {
-        return view('app.cliente.edit', ['cliente' => $cliente]);
+        $clientes = Cliente::all();
+        return view('app.pedido.edit', ['pedido' => $pedido, 'clientes' => $clientes]);
     }
 
     /**
@@ -85,15 +83,12 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(Request $request, Pedido $pedido)
     {
-
         $request->validate($this->regras, $this->feedback);
-
-        $cliente->update($request->all());
-
-        return redirect()->route('cliente.index');
-
+        $pedido->update($request->all());
+        return redirect()->route('pedido.index');
+        //
     }
 
     /**
@@ -102,10 +97,9 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(Pedido $pedido)
     {
-        $cliente->delete();
-
-        return redirect()->route('cliente.index');
+        $pedido->delete();
+        return redirect()->route('pedido.index');
     }
 }

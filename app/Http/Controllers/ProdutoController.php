@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Fornecedor;
 use App\Produto;
 use App\Unidade;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class ProdutoController extends Controller
         'nome.max' => 'O campo nome deve ter no mínimo 40 caracteres',
         'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres',
         'descricao.max' => 'O campo descrição deve ter no máximo 200 caracteres',
-        'integer' => 'O campo peso dever ser um npumero inteiro',
+        'integer' => 'O campo peso dever ser um número inteiro',
         'unidade_id.exists' => 'A unidade de medida informada não existe'
     ];
 
@@ -49,7 +50,8 @@ class ProdutoController extends Controller
     public function create()
     {
         $unidades = Unidade::all();
-        return view('app.produto.create', ['unidades' => $unidades]);
+        $fornecedores = Fornecedor::all();
+        return view('app.produto.create', ['unidades' => $unidades, 'fornecedores' => $fornecedores]);
     }
 
     /**
@@ -90,10 +92,12 @@ class ProdutoController extends Controller
     {
 
         $unidades = Unidade::all();
+        $fornecedores = Fornecedor::all();
 
         return view('app.produto.edit', [
             'produto' => $produto,
-            'unidades' => $unidades
+            'unidades' => $unidades,
+            'fornecedores' => $fornecedores
         ]);
     }
 

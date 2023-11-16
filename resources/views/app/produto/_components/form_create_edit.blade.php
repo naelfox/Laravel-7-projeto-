@@ -8,7 +8,20 @@
         @endif
         {{-- <input type="hidden" name="id" value=""> --}}
 
-        <input type="text" name="nome" placeholder="Nome" value="{{ isset($produto->nome) && !$errors->has('nome') ? '$produto->nome' : old('nome') }}" id="borda-preta">
+
+        <select name="fornecedor_id">
+
+            <option {{ !isset($produto) ? 'selected' : '' }} disabled>Escolha o fornecedor</option>
+            @foreach ($fornecedores as $fornecedor)
+                <option value="{{ $fornecedor->id }}"{{ ($produto->fornecedor_id ?? old('fornecedor_id')) == $fornecedor->id ? 'selected' : '' }}>
+                    {{ $fornecedor->nome }}</option>
+            @endforeach
+            {{-- <option value="1">Unidade</option> --}}
+        </select>
+
+        <input type="text" name="nome" placeholder="Nome"
+            value="{{ isset($produto->nome) && !$errors->has('nome') ? $produto->nome : old('nome') }}"
+            id="borda-preta">
         {{ $errors->has('nome') ? $errors->first('nome') : '' }}
 
 

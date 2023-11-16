@@ -21,7 +21,8 @@
             @component('app.produto._components.form_create_edit', [
                 'unidades' => $unidades,
                 'produto' => $produto,
-                'text' => 'Editar'
+                'text' => 'Editar',
+                'fornecedores' => $fornecedores
                 ])
             @endcomponent
 
